@@ -1,0 +1,253 @@
+openapi: 3.0.3
+info:
+  title: API Centro Médico Jireh
+  version: 1.0.0
+  description: Documentación para probar el catálogo de servicios médicos.
+servers:
+  - url: http://127.0.0.1
+  
+paths:
+
+#para servicios
+  /api/servicios:
+    get:
+      summary: Obtener los servicios médicos activos
+      responses:
+        '200':
+          description: Lista de servicios
+          content:
+            application/json:
+              schema:
+                type: object
+
+
+#para doctores
+  /api/servicios/{id}/doctores:
+    get:
+      summary: Obtener los doctores activos de un servicio
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identificador del servicio
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de doctores
+          content:
+            application/json:
+              schema:
+                type: object
+
+
+#para login
+  /login:
+    post:
+      summary: Iniciar sesión
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - correo
+                - contrasena
+              properties:
+                correo:
+                  type: string
+                  format: email
+                contrasena:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: Credenciales incorrectas
+        '303':
+          description: Inicio de sesión correcto
+        '419':
+          description: Token CSRF inválido
+
+
+#para revisar la disponibilidad
+  /api/disponibilidad:
+    get:
+      tags:
+        - Disponibilidad
+      summary: Consultar horarios disponibles de un doctor
+      parameters:
+        - name: servicio
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 1
+        - name: doctor
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 1
+        - name: fecha
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          example: "2026-10-15"
+      responses:
+        "200":
+          description: Horarios disponibles
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "401":
+          description: Se requiere iniciar sesión
+
+
+#para agendar una cita
+  /citas:
+    post:
+      tags:
+        - Citas
+      summary: Crear una cita médica
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - id_servicio
+                - id_doctor
+                - fecha
+                - hora
+              properties:
+                id_servicio:
+                  type: integer
+                  example: 1
+                id_doctor:
+                  type: integer
+                  example: 1
+                fecha:
+                  type: string
+                  format: date
+                  example: "2026-10-15"
+                hora:
+                  type: string
+                  example: "08:30"
+      responses:
+        "200":
+          description: Respuesta del servidor
+        "303":
+          description: Cita creada; el servidor redirige
+        "419":
+          description: Token CSRF inválido o vencido
+
+
+#para cancelar una cita
+  /citas/{idCita}/cancelar:
+    post:
+      tags:
+        - Citas
+      summary: Cancelar una cita futura del usuario
+      parameters:
+        - name: idCita
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Respuesta después de cancelar la cita
+        "303":
+          description: Cita cancelada; el servidor redirige
+        "419":
+          description: Token CSRF inválido o vencido
+
+
+#para obtener el token CSRF
+  /api/csrf:
+    get:
+      tags:
+        - Sesión
+      summary: Obtener el token CSRF
+      responses:
+        "200":
+          description: Token CSRF de la sesión
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  csrf_token:
+                    type: string
+                    example: "token-devuelto-por-el-servidor"
+
+#para crear un usuario
+  /registro:
+    post:
+      tags:
+        - Usuarios
+      summary: Registrar un usuario
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                primer_nombre:
+                  type: string
+                segundo_nombre:
+                  type: string
+                tercer_nombre:
+                  type: string
+                cuarto_nombre:
+                  type: string
+                primer_apellido:
+                  type: string
+                segundo_apellido:
+                  type: string
+                apellido_casada:
+                  type: string
+                correo:
+                  type: string
+                  format: email
+                  example: "usuario.nuevo@example.com"
+                contrasena:
+                  type: string
+                  format: password
+                confirmar_contrasena:
+                  type: string
+                  format: password
+                telefono:
+                  type: string
+      responses:
+        "200":
+          description: Respuesta del formulario, por ejemplo si hay un error
+          content:
+            text/html:
+              schema:
+                type: string
+        "303":
+          description: Registro exitoso; el servidor redirige
+        "419":
+          description: Token CSRF inválido o vencido
+
+#para cerrar sesión
+  /logout:
+    post:
+      tags:
+        - Sesión
+      summary: Cerrar la sesión del usuario
+      responses:
+        "200":
+          description: Respuesta después de cerrar sesión
+        "303":
+          description: Sesión cerrada; el servidor redirige
+        "419":
+          description: Token CSRF inválido o vencido

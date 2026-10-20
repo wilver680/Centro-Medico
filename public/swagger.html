@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Swagger - Centro Médico</title>
+
+  <link rel="stylesheet"
+        href="https://unpkg.com/swagger-ui-dist@5.33.3/swagger-ui.css"
+        integrity="sha256-GsMk99zSfkuThrS9ZCEnHsFH6SKiLAW6JLEVFemqYyE="
+        crossorigin="anonymous">
+</head>
+<body>
+  <div id="swagger-ui"></div>
+
+  <script
+    src="https://unpkg.com/swagger-ui-dist@5.33.3/swagger-ui-bundle.js"
+    integrity="sha256-OGHsTMjnufqfJQKA2pNQQ25BgTd4goLHU7mirF+3vS8="
+    crossorigin="anonymous"></script>
+
+  <script>
+    window.ui = SwaggerUIBundle({
+      url: "/openapi.yaml",
+      dom_id: "#swagger-ui",
+      withCredentials: true,
+      requestInterceptor: async (request) => {
+        request.credentials = "include";
+
+        if ((request.method || "GET").toUpperCase() === "POST") {
+          const respuesta = await fetch("/api/csrf", {
+            credentials: "include"
+          });
+
+          if (respuesta.ok) {
+            const datos = await respuesta.json();
+            request.headers["X-CSRF-Token"] = datos.csrf_token;
+          }
+        }
+
+        return request;
+      }
+    });
+  </script>
+</body>
+</html>

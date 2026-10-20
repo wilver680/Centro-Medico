@@ -1,0 +1,19 @@
+{
+  "name": "proyectosqa/centro-medico",
+  "description": "Sistema seguro de reserva de citas para un centro medico",
+  "type": "project",
+  "require": {
+    "php": ">=8.1",
+    "ext-mbstring": "*",
+    "ext-pdo": "*",
+    "ext-pdo_pgsql": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "CentroMedico\\": "src/"
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "*"
+  }
+}

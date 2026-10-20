@@ -1,0 +1,25 @@
+/.env
+/vendor/
+/.phpunit.cache/
+/.idea/
+/.vscode/
+*.log
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+
+# SonarQube y cobertura
+/.scannerwork/
+/coverage/
+
+# No subir instaladores locales
+*.exe
+
+# Otras variantes locales de variables de entorno
+/.env.*
+!/.env.example
