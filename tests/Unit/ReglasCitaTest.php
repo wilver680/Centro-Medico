@@ -77,7 +77,7 @@ public function testRechazaCitaEnFinDeSemana(): void
 
     //para que hora se valida la fecha de la cita
     $erroresEncontrados = $this->reglasCita->validate(
-        '2026-10-17',
+        '2026-10-20',
         '09:00',
         $fechaHoraActual
     );
