@@ -35,7 +35,7 @@ $fechaHoraActual = new DateTimeImmutable(
 
 //para que hora se valida la fecha de la cita 
 $erroresEncontrados = $this->reglasCita->validate(
-    '2026-10-24',
+    '2026-10-26',
     '08:00',
     $fechaHoraActual
 );
