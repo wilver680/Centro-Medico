@@ -35,7 +35,7 @@ $fechaHoraActual = new DateTimeImmutable(
 
 //para que hora se valida la fecha de la cita 
 $erroresEncontrados = $this->reglasCita->validate(
-    '2026-10-16',
+    '2026-10-24',
     '08:00',
     $fechaHoraActual
 );
@@ -56,7 +56,7 @@ public function testRechazaCitaEnHoraPasada(): void
 //para que hora se valida la fecha de la cita 
     $erroresEncontrados = $this->reglasCita->validate(
         '2026-10-16',
-        '10:30',
+        '10:00',
         $fechaHoraActual
     );
 
@@ -77,7 +77,7 @@ public function testRechazaCitaEnFinDeSemana(): void
 
     //para que hora se valida la fecha de la cita
     $erroresEncontrados = $this->reglasCita->validate(
-        '2026-10-20',
+        '2026-10-24',
         '09:00',
         $fechaHoraActual
     );
